@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Meal Plan for Elza Bug</title>
+        <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Weekly Meal Plan for Elza Bug</h1>
+    <button onclick="generateMealPlan()">Generate Meal Plan</button>
+    <div id="mealPlan"></div>
+
+    <script>
+        const breakfasts = {
+            "Oatmeal with fruits": "Mix oatmeal with your choice of fruits. Add a hint of cinnamon for flavor.",
+    "Greek yogurt with honey and granola": "Combine Greek yogurt with a tablespoon of honey. Top with granola and fresh berries.",
+    "Scrambled eggs with spinach": "Scramble eggs and add spinach in the last 2 minutes of cooking.",
+    "Pancakes with maple syrup": "Prepare pancake batter, cook on a griddle, and serve with maple syrup.",
+    "Smoothie with banana and berries": "Blend a banana with mixed berries and a cup of milk or almond milk.",
+    "Avocado toast": "Toast your favorite bread and top with mashed avocado, salt, pepper, and a drizzle of olive oil.",
+    "Bagel with cream cheese and salmon": "Spread cream cheese on a bagel and top with smoked salmon, capers, and onions.",
+    "French toast": "Dip bread in a mixture of egg, milk, and cinnamon. Cook until golden and top with syrup."
+        };
+        const lunches = {
+                "Chicken salad": "Mix diced chicken with mayonnaise, celery, grapes, and walnuts.",
+        "Quinoa and vegetable stir-fry": "Cook quinoa as directed. Stir-fry your favorite vegetables and mix with quinoa.",
+        "Turkey and avocado wrap": "Wrap turkey slices and avocado in a whole wheat tortilla with lettuce and tomato.",
+        "Lentil soup": "Cook lentils with diced tomatoes, carrots, onions, and celery in vegetable broth.",
+        "Grilled cheese sandwich": "Butter two slices of bread, place cheese between, and grill until golden brown.",
+        "Pasta salad": "Combine cooked pasta with cherry tomatoes, cucumber, feta cheese, olives, and Italian dressing.",
+        "Caprese sandwich": "Layer mozzarella, tomatoes, and basil on a ciabatta roll. Drizzle with balsamic glaze.",
+        "Thai green curry": "Simmer vegetables and chicken (or tofu) in green curry sauce and serve with rice."
+        };
+        const dinners = {
+            "Salmon with roasted vegetables": "Roast salmon and a variety of vegetables with olive oil and herbs.",
+            "Spaghetti with marinara sauce": "Cook spaghetti and serve with a marinara sauce and grated parmesan.",
+            "Chicken curry with rice": "Cook chicken pieces in curry sauce. Serve with basmati rice.",
+            "Beef tacos": "Cook ground beef with taco seasoning. Serve in taco shells with toppings.",
+            "Vegetable lasagna": "Layer lasagna noodles with cheese, spinach, zucchini, and marinara sauce. Bake until bubbly.",
+            "Stuffed bell peppers": "Stuff bell peppers with a mixture of rice, ground meat, tomatoes, and spices. Bake until tender.",
+            "Pork chops with applesauce": "Grill pork chops and serve with homemade applesauce and steamed green beans.",
+            "Mushroom risotto": "Cook Arborio rice with mushrooms, broth, and Parmesan cheese until creamy."
+        };
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        function getRandomMeal(meals, usedMeals) {
+            const keys = Object.keys(meals).filter(key => !usedMeals.has(key));
+            if (keys.length === 0) return null; // In case all meals are used
+            const meal = keys[Math.floor(Math.random() * keys.length)];
+            usedMeals.add(meal);
+            return meal;
+        }
+
+        function generateMealPlan() {
+            const plan = {};
+            const usedMeals = new Set(); // Track used meals
+
+            days.forEach(day => {
+                plan[day] = {
+                    Breakfast: getRandomMeal(breakfasts, usedMeals),
+                    Lunch: getRandomMeal(lunches, usedMeals),
+                    Dinner: getRandomMeal(dinners, usedMeals)
+                };
+            });
+
+            displayMealPlan(plan);
+        }
+
+        function displayMealPlan(plan) {
+            const container = document.getElementById("mealPlan");
+            container.innerHTML = ""; // Clear previous plan
+            Object.entries(plan).forEach(([day, meals]) => {
+                const dayElem = document.createElement("div");
+                dayElem.classList.add("day");
+                dayElem.innerHTML = `<strong>${day}</strong>`;
+                Object.entries(meals).forEach(([mealTime, meal]) => {
+                    const mealElem = document.createElement("div");
+                    mealElem.classList.add("meal");
+                    mealElem.innerHTML = `${mealTime} - ${meal}: ${breakfasts[meal] || lunches[meal] || dinners[meal]}`;
+                    dayElem.appendChild(mealElem);
+                });
+                container.appendChild(dayElem);
+            });
+        }
+    </script>
+</body>
+</html>
